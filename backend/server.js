@@ -1364,6 +1364,15 @@ app.get('/api/contador', verificarTokenMiddleware, async (req, res) => {
   }
 });
 
+// Healthcheck simples para Railway
+app.get('/health', (req, res) => {
+  res.json({ 
+    status: 'ok', 
+    timestamp: new Date().toISOString(),
+    environment: process.env.NODE_ENV || 'development'
+  });
+});
+
 // Servir arquivos estáticos do frontend em produção
 if (process.env.NODE_ENV === 'production') {
   const path = require('path');
