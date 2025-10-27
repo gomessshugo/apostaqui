@@ -42,6 +42,7 @@ function PaginaMercados() {
     const fetchLigas = async () => {
       try {
         console.log('🔍 Buscando ligas da API...');
+        console.log('🔑 Token no localStorage:', localStorage.getItem('token') ? 'Presente' : 'Ausente');
         const res = await api.get('/ligas');
         
         console.log('✅ Ligas recebidas:', res.data.ligas?.length || 0);
@@ -58,11 +59,24 @@ function PaginaMercados() {
         setLigas(ligasFiltradas);
       } catch (error) {
         console.error('❌ Erro ao buscar ligas:', error);
+        if (error.response?.status === 401) {
+          console.log('🔐 Token inválido, redirecionando para login...');
+          navigate('/login');
+          return;
+        }
+        setLigas([]);
       }
     };
 
+    // Verificar se há token antes de fazer a requisição
+    if (!token) {
+      console.log('🔐 Nenhum token encontrado, redirecionando para login...');
+      navigate('/login');
+      return;
+    }
+
     fetchLigas();
-  }, [token]);
+  }, [navigate, token]);
 
   // 2. Buscar jogos e tabela da liga selecionada
   const handleLigaChange = async (e) => {
