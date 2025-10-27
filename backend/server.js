@@ -1453,12 +1453,18 @@ app.get('/api/contador', (req, res) => {
 });
 
 // Servir arquivos estáticos do frontend em produção
-if (process.env.NODE_ENV === 'production') {
+// Forçar produção no Railway (que pode não definir NODE_ENV)
+const isProduction = process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT === 'production' || process.env.PORT;
+
+if (isProduction) {
   const path = require('path');
   const frontendPath = path.join(__dirname, '../frontend/dist');
   
   console.log('🌐 Configurando modo de produção...');
   console.log('📁 Caminho do frontend:', frontendPath);
+  console.log('🔍 NODE_ENV:', process.env.NODE_ENV);
+  console.log('🔍 RAILWAY_ENVIRONMENT:', process.env.RAILWAY_ENVIRONMENT);
+  console.log('🔍 PORT:', process.env.PORT);
   
   // Servir arquivos estáticos
   app.use(express.static(frontendPath));
