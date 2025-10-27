@@ -19,6 +19,62 @@ if (process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT ===
   console.log('🔧 Variáveis de ambiente forçadas para produção');
 }
 
+// Função para garantir que o usuário de teste sempre existe
+async function garantirUsuarioTeste() {
+  try {
+    const db = getDatabase();
+    if (!db) return;
+
+    // Verificar se o usuário teste existe
+    const usuarioExiste = new Promise((resolve, reject) => {
+      db.get('SELECT id FROM usuarios WHERE email = ?', ['teste@teste.com'], (err, row) => {
+        if (err) reject(err);
+        else resolve(!!row);
+      });
+    });
+
+    const existe = await usuarioExiste;
+    
+    if (!existe) {
+      console.log('🔧 Criando usuário de teste automaticamente...');
+      
+      // Criar usuário de teste
+      const bcrypt = require('bcryptjs');
+      const senhaHash = await bcrypt.hash('123456', 10);
+      
+      const criarUsuario = new Promise((resolve, reject) => {
+        db.run(
+          'INSERT INTO usuarios (email, senha, nome) VALUES (?, ?, ?)',
+          ['teste@teste.com', senhaHash, 'Usuário Teste'],
+          function(err) {
+            if (err) reject(err);
+            else resolve(this.lastID);
+          }
+        );
+      });
+
+      const usuarioId = await criarUsuario;
+      
+      // Criar banca inicial
+      const criarBanca = new Promise((resolve, reject) => {
+        db.run(
+          'INSERT INTO banca (usuario_id, saldo) VALUES (?, ?)',
+          [usuarioId, 1000.00],
+          function(err) {
+            if (err) reject(err);
+            else resolve();
+          }
+        );
+      });
+
+      await criarBanca;
+      console.log('✅ Usuário de teste criado automaticamente!');
+    }
+  } catch (error) {
+    console.error('❌ Erro ao criar usuário de teste:', error);
+  }
+}
+
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
@@ -123,6 +179,11 @@ conectarBanco()
   })
   .then(() => {
     console.log('✅ Tabelas criadas com sucesso');
+    // Garantir que o usuário de teste sempre existe
+    return garantirUsuarioTeste();
+  })
+  .then(() => {
+    console.log('✅ Sistema inicializado completamente');
   })
   .catch(err => {
     console.error('❌ Erro ao conectar ao banco:', err);
