@@ -1450,7 +1450,11 @@ app.get('/debug-env', (req, res) => {
     JWT_SECRET: process.env.JWT_SECRET ? 'Presente' : 'Ausente',
     NODE_ENV: process.env.NODE_ENV,
     RAILWAY_ENVIRONMENT: process.env.RAILWAY_ENVIRONMENT,
-    PORT: process.env.PORT
+    PORT: process.env.PORT,
+    // Mostrar valores brutos (sem mostrar as chaves completas por segurança)
+    GEMINI_PARTIAL: process.env.GEMINI_API_KEY ? process.env.GEMINI_API_KEY.substring(0, 10) + '...' : 'N/A',
+    FOOTBALL_PARTIAL: process.env.FOOTBALL_DATA_API_KEY ? process.env.FOOTBALL_DATA_API_KEY.substring(0, 10) + '...' : 'N/A',
+    ODDS_PARTIAL: process.env.THE_ODDS_API_KEY ? process.env.THE_ODDS_API_KEY.substring(0, 10) + '...' : 'N/A'
   });
 });
 
