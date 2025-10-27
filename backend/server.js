@@ -73,7 +73,7 @@ API Key configurada via .env: ${config.GEMINI_API_KEY ? '✅ Configurada' : '❌
 }
 
 const app = express();
-const PORT = 3001;
+const PORT = process.env.PORT || 3001;
 
 // Middleware
 app.use(cors());
@@ -90,7 +90,10 @@ conectarBanco()
   })
   .catch(err => {
     console.error('❌ Erro ao conectar ao banco:', err);
-    process.exit(1);
+    // Em produção, não sair do processo imediatamente
+    if (process.env.NODE_ENV !== 'production') {
+      process.exit(1);
+    }
   });
 
 // Rota de teste
@@ -1364,23 +1367,52 @@ app.get('/api/contador', verificarTokenMiddleware, async (req, res) => {
   }
 });
 
-// Healthcheck simples para Railway
+// Healthcheck robusto para Railway
 app.get('/health', (req, res) => {
-  res.json({ 
-    status: 'ok', 
-    timestamp: new Date().toISOString(),
-    environment: process.env.NODE_ENV || 'development'
-  });
+  try {
+    // Verificar se o banco está funcionando
+    const db = getDatabase();
+    if (!db) {
+      return res.status(503).json({ 
+        status: 'error', 
+        message: 'Database not available',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    res.json({ 
+      status: 'ok', 
+      message: 'API is healthy',
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
+      port: PORT
+    });
+  } catch (error) {
+    console.error('Healthcheck error:', error);
+    res.status(503).json({ 
+      status: 'error', 
+      message: 'Healthcheck failed',
+      timestamp: new Date().toISOString(),
+      error: error.message
+    });
+  }
 });
 
 // Servir arquivos estáticos do frontend em produção
 if (process.env.NODE_ENV === 'production') {
   const path = require('path');
-  app.use(express.static(path.join(__dirname, '../frontend/dist')));
+  const frontendPath = path.join(__dirname, '../frontend/dist');
   
-  // Rota para SPA (Single Page Application)
+  console.log('🌐 Configurando modo de produção...');
+  console.log('📁 Caminho do frontend:', frontendPath);
+  
+  // Servir arquivos estáticos
+  app.use(express.static(frontendPath));
+  
+  // Rota para SPA (Single Page Application) - deve ser a ÚLTIMA rota
   app.get('*', (req, res) => {
-    res.sendFile(path.join(__dirname, '../frontend/dist/index.html'));
+    console.log('🔄 Servindo SPA para:', req.path);
+    res.sendFile(path.join(frontendPath, 'index.html'));
   });
 }
 
@@ -1390,5 +1422,7 @@ app.listen(PORT, () => {
   console.log(`📊 Acesse: http://localhost:${PORT}`);
   if (process.env.NODE_ENV === 'production') {
     console.log(`🌐 Modo de produção ativado`);
+    const path = require('path');
+    console.log(`📁 Frontend será servido de: ${path.join(__dirname, '../frontend/dist')}`);
   }
 });
