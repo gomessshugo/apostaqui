@@ -1,6 +1,24 @@
 // Carregar variáveis de ambiente
 require('dotenv').config();
 
+// Forçar carregamento das variáveis em produção (Railway)
+if (process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT === 'production') {
+  // Definir as variáveis diretamente se não estiverem carregadas
+  if (!process.env.GEMINI_API_KEY) {
+    process.env.GEMINI_API_KEY = 'AIzaSyCZH_ltlRJgduc6-BCXLKYGfxYfsRjV5q1';
+  }
+  if (!process.env.FOOTBALL_DATA_API_KEY) {
+    process.env.FOOTBALL_DATA_API_KEY = '978a1d0654fc42aeb663d8fa26cd53d5';
+  }
+  if (!process.env.THE_ODDS_API_KEY) {
+    process.env.THE_ODDS_API_KEY = '26093dac2feb06d2c2f94b1f8668fe5e';
+  }
+  if (!process.env.JWT_SECRET) {
+    process.env.JWT_SECRET = 'your_jwt_secret_here';
+  }
+  console.log('🔧 Variáveis de ambiente forçadas para produção');
+}
+
 const express = require('express');
 const cors = require('cors');
 const axios = require('axios');
