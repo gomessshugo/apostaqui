@@ -1476,6 +1476,25 @@ app.get('/debug-env', (req, res) => {
   });
 });
 
+// Endpoint de teste para verificar se o login está funcionando
+app.post('/test-login', (req, res) => {
+  const { email, senha } = req.body;
+  console.log(`🔍 [TEST-LOGIN] Tentativa de login: ${email}`);
+  
+  if (email === 'teste@teste.com' && senha === '123456') {
+    res.json({
+      success: true,
+      message: 'Login de teste funcionando!',
+      usuario: { id: 1, email: 'teste@teste.com' }
+    });
+  } else {
+    res.json({
+      success: false,
+      message: 'Credenciais inválidas no teste'
+    });
+  }
+});
+
 // Healthcheck alternativo para Railway (caso o /health não funcione)
 app.get('/api/contador', (req, res) => {
   try {
