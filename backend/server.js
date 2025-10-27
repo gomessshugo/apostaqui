@@ -1441,6 +1441,19 @@ app.get('/health', (req, res) => {
   }
 });
 
+// Endpoint temporário para verificar variáveis de ambiente
+app.get('/debug-env', (req, res) => {
+  res.json({
+    GEMINI_API_KEY: process.env.GEMINI_API_KEY ? 'Presente' : 'Ausente',
+    FOOTBALL_DATA_API_KEY: process.env.FOOTBALL_DATA_API_KEY ? 'Presente' : 'Ausente',
+    THE_ODDS_API_KEY: process.env.THE_ODDS_API_KEY ? 'Presente' : 'Ausente',
+    JWT_SECRET: process.env.JWT_SECRET ? 'Presente' : 'Ausente',
+    NODE_ENV: process.env.NODE_ENV,
+    RAILWAY_ENVIRONMENT: process.env.RAILWAY_ENVIRONMENT,
+    PORT: process.env.PORT
+  });
+});
+
 // Healthcheck alternativo para Railway (caso o /health não funcione)
 app.get('/api/contador', (req, res) => {
   try {
