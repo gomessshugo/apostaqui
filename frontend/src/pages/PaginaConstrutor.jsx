@@ -356,21 +356,21 @@ export default function PaginaConstrutor() {
   }
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 lg:space-y-8">
       {/* Header V2 */}
-      <div className="bg-gradient-to-r from-orange-500 via-red-500 to-pink-600 rounded-2xl p-8 text-white shadow-xl">
-        <div className="flex items-center space-x-4 mb-4">
-          <div className="p-3 bg-white/20 rounded-2xl backdrop-blur-sm">
-            <Target className="h-8 w-8" />
+      <div className="bg-gradient-to-r from-orange-500 via-red-500 to-pink-600 rounded-2xl p-4 lg:p-8 text-white shadow-xl">
+        <div className="flex items-center space-x-3 lg:space-x-4 mb-4">
+          <div className="p-2 lg:p-3 bg-white/20 rounded-2xl backdrop-blur-sm">
+            <Target className="h-6 w-6 lg:h-8 lg:w-8" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold">Construtor de Sistemas</h1>
-            <p className="text-orange-100 text-lg">Crie suas múltiplas com proteção</p>
+            <h1 className="text-xl lg:text-3xl font-bold">Construtor de Sistemas</h1>
+            <p className="text-orange-100 text-sm lg:text-lg">Crie suas múltiplas com proteção</p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
           <div className="w-2 h-2 bg-green-400 rounded-full animate-pulse"></div>
-          <span className="text-sm">Sistema de cobertura inteligente</span>
+          <span className="text-xs lg:text-sm">Sistema de cobertura inteligente</span>
         </div>
       </div>
 
@@ -388,23 +388,23 @@ export default function PaginaConstrutor() {
       )}
 
       {/* Wizard de 3 Passos - Grid Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-6">
         
         {/* PASSO 1: Jogos Base Selecionados */}
         <div className="bg-white rounded-2xl shadow-lg border border-gray-200 overflow-hidden">
-          <div className="bg-gradient-to-r from-blue-500 to-indigo-600 px-6 py-4">
-            <div className="flex items-center space-x-3">
+          <div className="bg-gradient-to-r from-blue-500 to-indigo-600 px-4 lg:px-6 py-3 lg:py-4">
+            <div className="flex items-center space-x-2 lg:space-x-3">
               <div className="p-2 bg-white/20 rounded-xl">
-                <Target className="h-6 w-6 text-white" />
+                <Target className="h-5 w-5 lg:h-6 lg:w-6 text-white" />
               </div>
               <div>
-                <h2 className="text-xl font-bold text-white">Passo 1: Jogos Base</h2>
-                <p className="text-blue-100 text-sm">Jogos que estarão em todas as apostas</p>
+                <h2 className="text-lg lg:text-xl font-bold text-white">Passo 1: Jogos Base</h2>
+                <p className="text-blue-100 text-xs lg:text-sm">Jogos que estarão em todas as apostas</p>
               </div>
             </div>
           </div>
           
-          <div className="p-6">
+          <div className="p-4 lg:p-6">
             {jogosBase.length === 0 ? (
               <div className="text-center py-8 text-gray-500">
                 <Target className="h-12 w-12 mx-auto mb-4 text-gray-300" />

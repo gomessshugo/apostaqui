@@ -242,33 +242,33 @@ function PaginaMercados() {
 
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-6">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 to-blue-50 p-4 lg:p-6">
       {/* Header */}
-      <div className="mb-8">
+      <div className="mb-6 lg:mb-8">
         <div className="flex items-center gap-3 mb-4">
-          <div className="p-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl">
-            <Brain className="w-8 h-8 text-white" />
+          <div className="p-2 lg:p-3 bg-gradient-to-r from-purple-600 to-blue-600 rounded-xl">
+            <Brain className="w-6 h-6 lg:w-8 lg:h-8 text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
+            <h1 className="text-xl lg:text-3xl font-bold bg-gradient-to-r from-purple-600 to-blue-600 bg-clip-text text-transparent">
               Mercados Inteligentes
             </h1>
-            <p className="text-gray-600">Análise IA + Odds Reais</p>
+            <p className="text-sm lg:text-base text-gray-600">Análise IA + Odds Reais</p>
           </div>
         </div>
       </div>
 
       {/* Seletor de Liga */}
-      <div className="bg-white rounded-2xl shadow-lg p-6 mb-6">
+      <div className="bg-white rounded-2xl shadow-lg p-4 lg:p-6 mb-6">
         <div className="flex items-center gap-3 mb-4">
-          <Trophy className="w-6 h-6 text-yellow-500" />
-          <h2 className="text-xl font-semibold">Selecione uma Liga</h2>
+          <Trophy className="w-5 h-5 lg:w-6 lg:h-6 text-yellow-500" />
+          <h2 className="text-lg lg:text-xl font-semibold">Selecione uma Liga</h2>
         </div>
         
         <select 
           onChange={handleLigaChange} 
           value={ligaSelecionada}
-          className="w-full p-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+          className="w-full p-3 lg:p-4 border-2 border-gray-200 rounded-xl focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all text-sm lg:text-base"
         >
           <option value="">🏆 Escolha uma liga principal</option>
           {ligas.map((liga, index) => (
@@ -286,7 +286,7 @@ function PaginaMercados() {
               id="filtro-data"
               onChange={(e) => setFiltroData(e.target.value)} 
               value={filtroData}
-              className="w-full p-3 border border-gray-200 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-200 transition-all"
+              className="w-full p-3 border border-gray-200 rounded-xl focus:border-blue-500 focus:ring-1 focus:ring-blue-200 transition-all text-sm"
             >
               <option value="todos">🗓️ Todas as datas ({datasOrdenadas.length})</option>
               {datasOrdenadas.map(data => (
@@ -299,9 +299,9 @@ function PaginaMercados() {
         )}
       </div>
 
-      <div className="mt-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="mt-6 grid grid-cols-1 xl:grid-cols-3 gap-4 lg:gap-6">
         {/* Coluna da Esquerda (Maior) - Jogos e Tabela */}
-        <div className="lg:col-span-2 space-y-6">
+        <div className="xl:col-span-2 space-y-4 lg:space-y-6">
           {/* Tabela de Jogos */}
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
             {loading && (
@@ -322,20 +322,109 @@ function PaginaMercados() {
             {jogos.length > 0 && (
               <div className="overflow-x-auto">
                 {datasFiltradas.map((data, dataIndex) => (
-                  <div key={data} className={dataIndex > 0 ? 'mt-8' : ''}>
+                  <div key={data} className={dataIndex > 0 ? 'mt-6 lg:mt-8' : ''}>
                   {/* Título da Data */}
-                  <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-4 rounded-t-xl">
-                    <h3 className="text-lg font-bold flex items-center gap-2">
-                      <Trophy className="w-5 h-5" />
+                  <div className="bg-gradient-to-r from-blue-600 to-purple-600 text-white p-3 lg:p-4 rounded-t-xl">
+                    <h3 className="text-base lg:text-lg font-bold flex items-center gap-2">
+                      <Trophy className="w-4 h-4 lg:w-5 lg:h-5" />
                       {formatarDataExibicao(data)}
                     </h3>
-                    <p className="text-blue-100 text-sm">
+                    <p className="text-blue-100 text-xs lg:text-sm">
                       {jogosAgrupados[data].length} jogo{jogosAgrupados[data].length !== 1 ? 's' : ''} programado{jogosAgrupados[data].length !== 1 ? 's' : ''}
                     </p>
                   </div>
                   
-                  {/* Tabela de Jogos da Data */}
-                  <table className="w-full">
+                  {/* Tabela de Jogos da Data - Mobile First */}
+                  <div className="block lg:hidden">
+                    {jogosAgrupados[data].map((jogo, index) => {
+                      const oddsDoJogo = jogo.odds;
+                      const [timeCasa, timeVisitante] = jogo.nome.split(' vs ').map(t => t.trim());
+                      
+                      return (
+                        <div key={jogo.idJogo} className="border-b border-gray-100 p-4 bg-white">
+                          {/* Nome do Jogo */}
+                          <div className="flex items-center gap-2 mb-3">
+                            <div className="w-2 h-2 bg-green-500 rounded-full"></div>
+                            <div className="flex-1">
+                              <div className="font-semibold text-gray-900 text-sm">{jogo.nome}</div>
+                              <div className="text-xs text-gray-500">{jogo.hora}</div>
+                            </div>
+                          </div>
+                          
+                          {/* Odds em Cards */}
+                          <div className="grid grid-cols-2 gap-2 mb-3">
+                            {/* Odds 1x2 */}
+                            <div className="bg-gray-50 rounded-lg p-2">
+                              <div className="text-xs text-gray-600 mb-1">1x2</div>
+                              {oddsDoJogo && oddsDoJogo.casa !== 'N/A' ? (
+                                <div className="flex justify-between text-xs">
+                                  <span className="text-blue-600 font-semibold">{oddsDoJogo.casa}</span>
+                                  <span className="text-yellow-600 font-semibold">{oddsDoJogo.empate}</span>
+                                  <span className="text-red-600 font-semibold">{oddsDoJogo.visitante}</span>
+                                </div>
+                              ) : (
+                                <span className="text-xs text-gray-400">N/A</span>
+                              )}
+                            </div>
+                            
+                            {/* Odds O/U 2.5 */}
+                            <div className="bg-gray-50 rounded-lg p-2">
+                              <div className="text-xs text-gray-600 mb-1">O/U 2.5</div>
+                              {oddsDoJogo && oddsDoJogo.over25 !== 'N/A' ? (
+                                <div className="flex justify-between text-xs">
+                                  <span className="text-green-600 font-semibold">{oddsDoJogo.over25}</span>
+                                  <span className="text-orange-600 font-semibold">{oddsDoJogo.under25}</span>
+                                </div>
+                              ) : (
+                                <span className="text-xs text-gray-400">N/A</span>
+                              )}
+                            </div>
+                          </div>
+                          
+                          {/* Botões de Ação */}
+                          <div className="flex gap-2">
+                            {/* Botões de Ação Rápida */}
+                            <div className="flex gap-1 flex-1">
+                              <button
+                                onClick={() => adicionarPalpite(jogo, `${timeCasa} Vence`, oddsDoJogo?.casa)}
+                                disabled={!oddsDoJogo || oddsDoJogo.casa === 'N/A'}
+                                className="px-2 py-1 text-xs bg-blue-500 text-white rounded hover:bg-blue-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                              >
+                                [1]
+                              </button>
+                              <button
+                                onClick={() => adicionarPalpite(jogo, 'Empate', oddsDoJogo?.empate)}
+                                disabled={!oddsDoJogo || oddsDoJogo.empate === 'N/A'}
+                                className="px-2 py-1 text-xs bg-yellow-500 text-white rounded hover:bg-yellow-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                              >
+                                [X]
+                              </button>
+                              <button
+                                onClick={() => adicionarPalpite(jogo, `${timeVisitante} Vence`, oddsDoJogo?.visitante)}
+                                disabled={!oddsDoJogo || oddsDoJogo.visitante === 'N/A'}
+                                className="px-2 py-1 text-xs bg-red-500 text-white rounded hover:bg-red-600 disabled:bg-gray-300 disabled:cursor-not-allowed"
+                              >
+                                [2]
+                              </button>
+                            </div>
+                            
+                            {/* Botão Análise IA */}
+                            <button
+                              onClick={() => analisarComIA(timeCasa, timeVisitante, ligaSelecionada, jogo)}
+                              disabled={analisando}
+                              className="px-3 py-1 text-xs bg-gradient-to-r from-purple-500 to-pink-500 text-white rounded hover:from-purple-600 hover:to-pink-600 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1"
+                            >
+                              <Brain className="w-3 h-3" />
+                              IA
+                            </button>
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+                  
+                  {/* Tabela Desktop */}
+                  <table className="hidden lg:table w-full">
                     <thead className="bg-gradient-to-r from-gray-50 to-gray-100">
                       <tr>
                         <th className="py-4 px-6 text-left font-semibold text-gray-700">Jogo</th>
@@ -546,32 +635,34 @@ function PaginaMercados() {
         </div>
 
         {/* Coluna da Direita (Menor) - Cesta de Palpites */}
-        <div className="lg:col-span-1">
+        <div className="xl:col-span-1">
           <div className="sticky top-6"> {/* <-- Classe Mágica "Grudenta" */}
             {/* Log para verificar a condição de renderização da Cesta */}
             {console.log(`🧐 [DEBUG Render Cesta] cestaPalpites.length é: ${cestaPalpites.length}. Mostrando cesta? ${cestaPalpites.length > 0}`)}
             {cestaPalpites.length > 0 ? (
               // O código da Cesta de Palpites que você já tem
-              <div className="bg-white rounded-2xl shadow-lg p-6 animate-fade-in"> {/* Adicionado animação */}
+              <div className="bg-white rounded-2xl shadow-lg p-4 lg:p-6 animate-fade-in"> {/* Adicionado animação */}
           <div className="flex items-center gap-3 mb-4">
-            <ShoppingCart className="w-6 h-6 text-green-500 animate-pulse" />
-            <h2 className="text-xl font-semibold">Sua Cesta ({cestaPalpites.length})</h2>
+            <ShoppingCart className="w-5 h-5 lg:w-6 lg:h-6 text-green-500 animate-pulse" />
+            <h2 className="text-lg lg:text-xl font-semibold">Sua Cesta ({cestaPalpites.length})</h2>
           </div>
 
-          <div className="space-y-2 mb-4">
+          <div className="space-y-2 mb-4 max-h-64 overflow-y-auto">
             {cestaPalpites.map((palpite) => (
-              <div key={palpite.idUnico} className="flex items-center justify-between p-3 bg-gray-50 rounded-lg"> {/* <-- KEY CORRIGIDA */}
-                <div className="flex items-center gap-3">
-                  <CheckCircle className="w-4 h-4 text-green-500" />
-                  <span className="font-medium">{palpite.mercado}</span> {/* <-- Propriedade correta */}
-                  <span className="text-sm text-gray-500">({palpite.jogo_nome.split(' (')[0]})</span> {/* <-- Propriedade correta */}
-                  <span className="text-sm font-semibold text-blue-600">@ {palpite.odd_leg}</span> {/* <-- Propriedade correta */}
+              <div key={palpite.idUnico} className="flex items-center justify-between p-2 lg:p-3 bg-gray-50 rounded-lg"> {/* <-- KEY CORRIGIDA */}
+                <div className="flex items-center gap-2 lg:gap-3 flex-1 min-w-0">
+                  <CheckCircle className="w-3 h-3 lg:w-4 lg:h-4 text-green-500 flex-shrink-0" />
+                  <div className="min-w-0 flex-1">
+                    <div className="font-medium text-sm lg:text-base truncate">{palpite.mercado}</div> {/* <-- Propriedade correta */}
+                    <div className="text-xs lg:text-sm text-gray-500 truncate">({palpite.jogo_nome.split(' (')[0]})</div> {/* <-- Propriedade correta */}
+                    <div className="text-xs lg:text-sm font-semibold text-blue-600">@ {palpite.odd_leg}</div> {/* <-- Propriedade correta */}
+                  </div>
                 </div>
                 <button 
                   onClick={() => setCestaPalpites(cestaPalpites.filter(p => p.idUnico !== palpite.idUnico))}
-                  className="text-red-500 hover:text-red-700 p-1"
+                  className="text-red-500 hover:text-red-700 p-1 flex-shrink-0"
                 >
-                  <X className="w-4 h-4" />
+                  <X className="w-3 h-3 lg:w-4 lg:h-4" />
                 </button>
               </div>
             ))}
@@ -579,17 +670,17 @@ function PaginaMercados() {
 
           <button 
             onClick={enviarParaConstrutor}
-            className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white p-4 rounded-xl font-semibold hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl"
+            className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white p-3 lg:p-4 rounded-xl font-semibold hover:from-green-700 hover:to-emerald-700 transition-all shadow-lg hover:shadow-xl text-sm lg:text-base"
           >
             🚀 Usar {cestaPalpites.length} Palpites no Construtor
           </button>
         </div>
             ) : (
               // Card "placeholder" quando a cesta está vazia
-              <div className="bg-white rounded-2xl shadow-lg p-6 text-center text-gray-500">
-                <ShoppingCart className="w-12 h-12 mx-auto text-gray-300" />
-                <p className="font-semibold mt-2">Cesta de Palpites</p>
-                <p className="text-sm mt-1">Sua cesta está vazia. Clique nos botões [1], [X], [2]... nos jogos para adicionar palpites.</p>
+              <div className="bg-white rounded-2xl shadow-lg p-4 lg:p-6 text-center text-gray-500">
+                <ShoppingCart className="w-8 h-8 lg:w-12 lg:h-12 mx-auto text-gray-300" />
+                <p className="font-semibold mt-2 text-sm lg:text-base">Cesta de Palpites</p>
+                <p className="text-xs lg:text-sm mt-1">Sua cesta está vazia. Clique nos botões [1], [X], [2]... nos jogos para adicionar palpites.</p>
               </div>
             )}
           </div>

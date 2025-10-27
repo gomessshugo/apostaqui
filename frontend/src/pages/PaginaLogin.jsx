@@ -41,21 +41,21 @@ export default function PaginaLogin({ onLogin }) {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-md w-full space-y-8">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 py-8 px-4 sm:px-6 lg:px-8">
+      <div className="max-w-md w-full space-y-6 lg:space-y-8">
         {/* Header */}
         <div className="text-center">
-          <div className="mx-auto h-20 w-20 flex items-center justify-center rounded-3xl bg-gradient-to-r from-blue-500 to-purple-600 shadow-2xl">
-            <Zap className="h-10 w-10 text-white" />
+          <div className="mx-auto h-16 w-16 lg:h-20 lg:w-20 flex items-center justify-center rounded-3xl bg-gradient-to-r from-blue-500 to-purple-600 shadow-2xl">
+            <Zap className="h-8 w-8 lg:h-10 lg:w-10 text-white" />
           </div>
-          <h2 className="mt-6 text-center text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
+          <h2 className="mt-4 lg:mt-6 text-center text-2xl lg:text-4xl font-bold bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             {isLogin ? 'Bem-vindo de volta!' : 'Crie sua conta'}
           </h2>
-          <p className="mt-2 text-center text-gray-600 flex items-center justify-center">
-            <Sparkles className="h-4 w-4 mr-2 text-blue-500" />
+          <p className="mt-2 text-center text-gray-600 flex items-center justify-center text-sm lg:text-base">
+            <Sparkles className="h-3 w-3 lg:h-4 lg:w-4 mr-2 text-blue-500" />
             {isLogin ? 'Entre no sistema de apostas' : 'Comece sua jornada'}
           </p>
-          <p className="mt-4 text-center text-sm text-gray-600">
+          <p className="mt-3 lg:mt-4 text-center text-xs lg:text-sm text-gray-600">
             {isLogin ? 'Não tem conta? ' : 'Já tem conta? '}
             <button
               onClick={() => setIsLogin(!isLogin)}
@@ -67,7 +67,7 @@ export default function PaginaLogin({ onLogin }) {
         </div>
         
         {/* Form */}
-        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-gray-200/50">
+        <div className="bg-white/80 backdrop-blur-sm rounded-2xl p-6 lg:p-8 shadow-xl border border-gray-200/50">
           <form className="space-y-6" onSubmit={handleSubmit}>
             {error && (
               <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-xl flex items-center">
