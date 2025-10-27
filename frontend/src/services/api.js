@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 const API_BASE_URL = process.env.NODE_ENV === 'production' 
-  ? '' // Em produção, usa a mesma URL do frontend
+  ? 'https://web-production-0a522.up.railway.app' // Em produção, usa a URL do Railway
   : 'http://localhost:3001' // Em desenvolvimento, usa localhost
 
 // Configurar axios
