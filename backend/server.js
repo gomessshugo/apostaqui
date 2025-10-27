@@ -1344,10 +1344,33 @@ app.get('/odds-ligas', verificarTokenMiddleware, async (req, res) => {
   }
 });
 
-// Endpoint para verificar contador de API
-app.get('/api/contador', verificarTokenMiddleware, async (req, res) => {
+// Endpoint para verificar contador de API (SEM autenticação - para healthcheck)
+app.get('/api/contador', async (req, res) => {
   try {
     console.log('📊 Buscando contador de API...');
+    
+    const contagem = await buscarContagemMes('the_odds_api');
+    
+    res.json({
+      success: true,
+      uso: contagem,
+      limite: 500,
+      restante: Math.max(0, 500 - contagem),
+      percentual: Math.round((contagem / 500) * 100)
+    });
+  } catch (error) {
+    console.error('❌ Erro ao buscar contador:', error);
+    res.status(500).json({
+      success: false,
+      error: 'Erro ao buscar contador de API'
+    });
+  }
+});
+
+// Endpoint para verificar contador de API (SEM autenticação - para healthcheck)
+app.get('/api/contador-publico', async (req, res) => {
+  try {
+    console.log('📊 Buscando contador de API (público)...');
     
     const contagem = await buscarContagemMes('the_odds_api');
     
@@ -1383,6 +1406,37 @@ app.get('/health', (req, res) => {
     res.json({ 
       status: 'ok', 
       message: 'API is healthy',
+      timestamp: new Date().toISOString(),
+      environment: process.env.NODE_ENV || 'development',
+      port: PORT
+    });
+  } catch (error) {
+    console.error('Healthcheck error:', error);
+    res.status(503).json({ 
+      status: 'error', 
+      message: 'Healthcheck failed',
+      timestamp: new Date().toISOString(),
+      error: error.message
+    });
+  }
+});
+
+// Healthcheck alternativo para Railway (caso o /health não funcione)
+app.get('/api/contador', (req, res) => {
+  try {
+    // Verificar se o banco está funcionando
+    const db = getDatabase();
+    if (!db) {
+      return res.status(503).json({ 
+        status: 'error', 
+        message: 'Database not available',
+        timestamp: new Date().toISOString()
+      });
+    }
+
+    res.json({ 
+      status: 'ok', 
+      message: 'API is healthy via /api/contador',
       timestamp: new Date().toISOString(),
       environment: process.env.NODE_ENV || 'development',
       port: PORT
