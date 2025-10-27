@@ -4,12 +4,13 @@
   "description": "Sistema de Apostas Esportivas com IA",
   "main": "backend/server.js",
   "scripts": {
-    "start": "node backend/server.js",
+    "start": "npm run build && node backend/server.js",
     "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
     "backend": "cd backend && node server.js",
     "frontend": "cd frontend && npm run dev",
-    "build": "cd frontend && npm run build",
-    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install"
+    "build": "cd frontend && npm install && npm run build",
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "postinstall": "npm run build"
   },
   "keywords": ["apostas", "esportes", "ia", "nodejs", "react"],
   "author": "Hugo Samuel",
