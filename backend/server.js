@@ -79,6 +79,24 @@ const PORT = process.env.PORT || 3001;
 app.use(cors());
 app.use(express.json());
 
+// Servir arquivos estáticos do frontend em produção (DEVE VIR ANTES DAS ROTAS DA API)
+// Forçar produção no Railway (que pode não definir NODE_ENV)
+const isProduction = process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT === 'production' || process.env.PORT;
+
+if (isProduction) {
+  const path = require('path');
+  const frontendPath = path.join(__dirname, '../frontend/dist');
+  
+  console.log('🌐 Configurando modo de produção...');
+  console.log('📁 Caminho do frontend:', frontendPath);
+  console.log('🔍 NODE_ENV:', process.env.NODE_ENV);
+  console.log('🔍 RAILWAY_ENVIRONMENT:', process.env.RAILWAY_ENVIRONMENT);
+  console.log('🔍 PORT:', process.env.PORT);
+  
+  // Servir arquivos estáticos
+  app.use(express.static(frontendPath));
+}
+
 // Conectar ao banco e criar tabelas
 conectarBanco()
   .then(() => {
@@ -96,13 +114,15 @@ conectarBanco()
     }
   });
 
-// Rota de teste
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'API do Gestor de Apostas funcionando!',
-    timestamp: new Date().toISOString()
+// Rota de teste da API (apenas em desenvolvimento)
+if (process.env.NODE_ENV !== 'production' && !process.env.PORT) {
+  app.get('/', (req, res) => {
+    res.json({ 
+      message: 'API do Gestor de Apostas funcionando!',
+      timestamp: new Date().toISOString()
+    });
   });
-});
+}
 
 // Endpoint para registrar usuário
 app.post('/registrar', async (req, res) => {
@@ -1452,24 +1472,11 @@ app.get('/api/contador', (req, res) => {
   }
 });
 
-// Servir arquivos estáticos do frontend em produção
-// Forçar produção no Railway (que pode não definir NODE_ENV)
-const isProduction = process.env.NODE_ENV === 'production' || process.env.RAILWAY_ENVIRONMENT === 'production' || process.env.PORT;
-
+// Rota para SPA (Single Page Application) - deve ser a ÚLTIMA rota
 if (isProduction) {
   const path = require('path');
   const frontendPath = path.join(__dirname, '../frontend/dist');
   
-  console.log('🌐 Configurando modo de produção...');
-  console.log('📁 Caminho do frontend:', frontendPath);
-  console.log('🔍 NODE_ENV:', process.env.NODE_ENV);
-  console.log('🔍 RAILWAY_ENVIRONMENT:', process.env.RAILWAY_ENVIRONMENT);
-  console.log('🔍 PORT:', process.env.PORT);
-  
-  // Servir arquivos estáticos
-  app.use(express.static(frontendPath));
-  
-  // Rota para SPA (Single Page Application) - deve ser a ÚLTIMA rota
   app.get('*', (req, res) => {
     console.log('🔄 Servindo SPA para:', req.path);
     res.sendFile(path.join(frontendPath, 'index.html'));
